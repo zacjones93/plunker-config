@@ -21,29 +21,26 @@ export default class Main extends React.Component{
 
   
 
-  handleClickHtml(){
-    var show = "?show=index.html"
-    this.setState({ShowHTML: !this.state.ShowHTML});
-    console.log("ShowHTML: ", this.state.url);
+  handleClickHtml(showH, showJ){
+    showH = !showH;
+    this.state.ShowHTML =!this.state.ShowHTML 
     // checks if other tags are there, if not, adds '?show=index.html'
-    if (this.state.ShowHTML  && this.state.ShowJS == false){
-      console.log("show: ", show);
-      this.setState((state) => ({ url: state.url.concat("?show=index.html") }))
-    } else if(this.state.ShowHTML == true && this.state.ShowJS == true){
+    if (showH  && showJ == false){
+      this.setState((state) => ({
+         url: state.url.concat("?show=index.html"),
+        }))
+    } else if(showH == true && showJ == true){
         this.setState((state) => ({ url: state.url.concat(",index.html") }))
-    }else if (!this.state.ShowHTML) {
-      console.log("url: ",this.state.url);
-      console.log("baseUrl: ", this.state.baseUrl);
+    }else if (!showH) {
       this.setState({
         url: this.state.baseUrl 
     })
     }
   }
 
-  handleClickJS(){
-    this.setState({ShowJS: !this.state.ShowJS});
-    console.log("ShowHTML: ", this.state.ShowHTML);
-    console.log("ShowJS: ", this.state.ShowJS);
+  handleClickJS(showJ){
+    showJ = !showJ;
+    this.state.ShowJS = !this.state.ShowJS;
   }
 
   reset(){
@@ -51,19 +48,21 @@ export default class Main extends React.Component{
   }
   
   render(){
+    var showH = this.state.ShowHTML;
+    var showJ = this.state.ShowJS;
     return (
       <div>
         <div>
           <span>Current URL: </span>
           {this.state.url}<br/>
           <span>Plunker URL:</span><br/>
-          <input type="text" onClick={this.handleChange.bind(this)}/>
+          <input type="text" onChange={this.handleChange.bind(this)}/>
         </div>
         <div>
         
           <span>What tabs will be shown? (Defualts to index.html and preview)</span>
-          <button onClick={this.handleClickHtml.bind(this)}>Show html</button>
-          <button onClick={this.handleClickJS.bind(this)}>Show JavaScript</button>
+          <button onClick={this.handleClickHtml.bind(this, showH, showJ)}>Show html</button>
+          <button onClick={this.handleClickJS.bind(this,showJ)}>Show JavaScript</button>
           <button onClick={this.reset.bind(this)}>reset</button>
         </div>
         <br/>
