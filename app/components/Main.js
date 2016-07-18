@@ -22,6 +22,7 @@ export default class Main extends React.Component{
   
 
   handleClickHtml(showH, showJ, showC, showP){
+    // flipping the values from true to false or visa verca after button click
     showH = !showH;
     this.state.ShowHTML =!this.state.ShowHTML 
 
@@ -33,9 +34,28 @@ export default class Main extends React.Component{
     } else if( showH && (showJ || showC || showP) ){
         this.setState((state) => ({ url: state.url.concat([",index.html"]) }))
     }else if (!showH) {
-      this.setState({
-        url: this.state.baseUrl 
-    })
+      var index = this.state.url.indexOf("?show=index.html");
+      if (index != -1){
+        if(this.state.url.length === 2) {
+          this.state.url.splice(index, 1);
+          this.setState({
+           url: this.state.url
+          })
+        } else if (this.state.url.length > 2) {
+          this.state.url.splice(index, 1);
+          this.state.url[index] = "?show=" + this.state.url[index].substr(1);
+          this.setState({
+            url: this.state.url
+          })
+        }
+      }
+      var index = this.state.url.indexOf(",index.html");
+      if (index != -1){
+        this.state.url.splice(index, 1);
+        this.setState({
+          url: this.state.url
+        })
+      }
     }
   }
 
@@ -51,6 +71,29 @@ export default class Main extends React.Component{
       this.setState((state) => ({
         url: state.url.concat([",js"]),
       }))
+    }else if (!showJ) {
+      var index = this.state.url.indexOf("?show=js");
+      if (index != -1){
+        if(this.state.url.length === 2) {
+          this.state.url.splice(index, 1);
+          this.setState({
+           url: this.state.url
+          })
+        } else if (this.state.url.length > 2) {
+          this.state.url.splice(index, 1);
+          this.state.url[index] = "?show=" + this.state.url[index].substr(1);
+          this.setState({
+            url: this.state.url
+          })
+        }
+      }
+      var index = this.state.url.indexOf(",js");
+      if (index != -1){
+        this.state.url.splice(index, 1);
+        this.setState({
+          url: this.state.url
+        })
+      }
     }
   }
 
@@ -66,6 +109,29 @@ export default class Main extends React.Component{
       this.setState((state) => ({
         url: state.url.concat([",css"]),
       }))
+    }else if (!showC) {
+      var index = this.state.url.indexOf("?show=css");
+      if (index != -1){
+        if(this.state.url.length === 2) {
+          this.state.url.splice(index, 1);
+          this.setState({
+           url: this.state.url
+          })
+        } else if (this.state.url.length > 2) {
+          this.state.url.splice(index, 1);
+          this.state.url[index] = "?show=" + this.state.url[index].substr(1);
+          this.setState({
+            url: this.state.url
+          })
+        }
+      }
+      var index = this.state.url.indexOf(",css");
+      if (index != -1){
+        this.state.url.splice(index, 1);
+        this.setState({
+          url: this.state.url
+        })
+      }
     }
 
   }
@@ -82,6 +148,29 @@ export default class Main extends React.Component{
       this.setState((state) => ({
         url: state.url.concat([",preview"]),
       }))
+    } else if (!showP) {
+      var index = this.state.url.indexOf("?show=preview");
+      if (index != -1){
+        if(this.state.url.length === 2) {
+          this.state.url.splice(index, 1);
+          this.setState({
+           url: this.state.url
+          })
+        } else if (this.state.url.length > 2) {
+          this.state.url.splice(index, 1);
+          this.state.url[index] = "?show=" + this.state.url[index].substr(1);
+          this.setState({
+            url: this.state.url
+          })
+        }
+      }
+      var index = this.state.url.indexOf(",preview");
+      if (index != -1){
+        this.state.url.splice(index, 1);
+        this.setState({
+          url: this.state.url
+        })
+      }
     }
   }
 
@@ -113,7 +202,7 @@ export default class Main extends React.Component{
         <div>
         
           <span>What tabs will be shown? (Defualts to index.html and preview)</span>
-          <button onClick={this.handleClickHtml.bind(this, showH, showJ, showC, showP)}>Show html</button>
+          <button ref="html" onClick={this.handleClickHtml.bind(this, showH, showJ, showC, showP)}>Show html</button>
           <button onClick={this.handleClickJS.bind(this, showH, showJ, showC, showP)}>Show JavaScript</button>
           <button onClick={this.handleClickCSS.bind(this, showH, showJ, showC, showP)}>Show CSS</button>
           <button onClick={this.handleClickPrev.bind(this, showH, showJ, showC, showP)}>Show Preview</button>
