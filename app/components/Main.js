@@ -1,228 +1,126 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { handleClick } from './showFiles.js';
 
-export default class Main extends React.Component{
-   constructor(props){
-        super(props);
-        this.state = {
-          baseUrl: ['https://embed.plnkr.co/'],
-          url: ['https://embed.plnkr.co/'],
-          ShowHTML: false,
-          ShowJS: false,
-          ShowPrev: false,
-          ShowCSS: false
-        }
+// Code goes here
+class Main extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      plunkerSlug: " ",
+      showFiles: [],
+      onlyTrue: 0,
+      sidebar: " ",
+      deferRun: " ",
+      Url: `${this.props.Url}`,
+      baseUrl: "https://embed.plnkr.co/"
     }
-  handleChange(e) {
+  }
+  configureUrl(plunkSlug, show, side, defer) {
+    const { plunkerSlug, showFiles, sidebar, deferRun, baseUrl } = this.state;
+    let configuredUrl = `${baseUrl}${plunkSlug}${showFiles}${sidebar}${deferRun}`
+    this.setState({Url: configuredUrl});
+  };
+  urlChange(event) {
+    this.setState({Url: event.target.value})
+  }; 
+
+  slugChange(e) {
+    const { showFiles, sidebar, deferRun } = this.state
+    let temp = this.refs.slug.value;
     this.setState({
-      url: e.target.value
-    })
-  }
-
-  
-
-  handleClickHtml(showH, showJ, showC, showP){
-    // flipping the values from true to false or visa verca after button click
-    showH = !showH;
-    this.state.ShowHTML =!this.state.ShowHTML 
-
-    // checks if other tags are there, if not, adds '?show=index.html'
-    if ( showH  && !showJ && !showC && !showP ){
-      this.setState((state) => ({
-         url: state.url.concat(["?show=index.html"]),
-        }))
-    } else if( showH && (showJ || showC || showP) ){
-        this.setState((state) => ({ url: state.url.concat([",index.html"]) }))
-    }else if (!showH) {
-      var index = this.state.url.indexOf("?show=index.html");
-      if (index != -1){
-        if(this.state.url.length === 2) {
-          this.state.url.splice(index, 1);
+      plunkerSlug: this.refs.slug.value
+    });
+    this.configureUrl(temp, showFiles, sidebar, deferRun);
+  };
+  handleShowFile(e) {
+    let name = e.target.name;
+    let showHtml, showJs, showCss, showPreview;
+    switch(name) {
+      case "index.html":{
+        showHtml = e.target.checked
+        if (showHtml) {
           this.setState({
-           url: this.state.url
-          })
-        } else if (this.state.url.length > 2) {
-          this.state.url.splice(index, 1);
-          this.state.url[index] = "?show=" + this.state.url[index].substr(1);
+            showFiles: this.state.showFiles.concat(handleClick(this, name, showHtml, showJs, showCss, showPreview))
+          });
+        } else {
           this.setState({
-            url: this.state.url
+            showFiles: handleClick(this, name, showHtml, showJs, showCss, showPreview)
           })
         }
+        break;
       }
-      var index = this.state.url.indexOf(",index.html");
-      if (index != -1){
-        this.state.url.splice(index, 1);
-        this.setState({
-          url: this.state.url
-        })
-      }
-    }
-  }
-
-  handleClickJS(showH, showJ, showC, showP){
-    showJ = !showJ;
-    this.state.ShowJS = !this.state.ShowJS;
-
-    if ( showJ && !showH && !showC && !showP ){
-      this.setState((state) => ({
-        url: state.url.concat(["?show=js"]),
-      }))
-    } else if ( showJ && (showH || showC || showP) ) {
-      this.setState((state) => ({
-        url: state.url.concat([",js"]),
-      }))
-    }else if (!showJ) {
-      var index = this.state.url.indexOf("?show=js");
-      if (index != -1){
-        if(this.state.url.length === 2) {
-          this.state.url.splice(index, 1);
+      case "js":{
+        showJs = e.target.checked
+        console.log("showJS click: ", showJs)
+        if (showJs){
           this.setState({
-           url: this.state.url
-          })
-        } else if (this.state.url.length > 2) {
-          this.state.url.splice(index, 1);
-          this.state.url[index] = "?show=" + this.state.url[index].substr(1);
+            showFiles: this.state.showFiles.concat(handleClick(this, name, showHtml, showJs, showCss, showPreview))
+          });
+        } else {
           this.setState({
-            url: this.state.url
+            showFiles: handleClick(this, name, showHtml, showJs, showCss, showPreview)
           })
         }
+        break;
       }
-      var index = this.state.url.indexOf(",js");
-      if (index != -1){
-        this.state.url.splice(index, 1);
-        this.setState({
-          url: this.state.url
-        })
-      }
-    }
-  }
-
-  handleClickCSS(showH, showJ, showC, showP){
-    showC = !showC;
-    this.state.ShowCSS = !this.state.ShowCSS;
-
-    if (showC && !showH && !showJ && !showP){
-      this.setState((state) => ({
-        url: state.url.concat(["?show=css"]),
-      }))
-    } else if (showC && (showH || showJ || showP) ) {
-      this.setState((state) => ({
-        url: state.url.concat([",css"]),
-      }))
-    }else if (!showC) {
-      var index = this.state.url.indexOf("?show=css");
-      if (index != -1){
-        if(this.state.url.length === 2) {
-          this.state.url.splice(index, 1);
+      case "css":{
+        showCss = e.target.checked
+        if (showCss) {
           this.setState({
-           url: this.state.url
-          })
-        } else if (this.state.url.length > 2) {
-          this.state.url.splice(index, 1);
-          this.state.url[index] = "?show=" + this.state.url[index].substr(1);
+            showFiles: this.state.showFiles.concat(handleClick(this, name, showHtml, showJs, showCss, showPreview))
+          });
+        } else {
           this.setState({
-            url: this.state.url
+            showFiles: handleClick(this, name, showHtml, showJs, showCss, showPreview)
           })
         }
+        break;
       }
-      var index = this.state.url.indexOf(",css");
-      if (index != -1){
-        this.state.url.splice(index, 1);
-        this.setState({
-          url: this.state.url
-        })
-      }
-    }
-
-  }
-
-  handleClickPrev(showH, showJ, showC, showP){
-    showP = !showP;
-    this.state.ShowPrev = !this.state.ShowPrev
-
-    if (showP && !showH && !showJ && !showC){
-      this.setState((state) => ({
-        url: state.url.concat(["?show=preview"]),
-      }))
-    } else if (showP && (showH || showJ || showC) ) {
-      this.setState((state) => ({
-        url: state.url.concat([",preview"]),
-      }))
-    } else if (!showP) {
-      var index = this.state.url.indexOf("?show=preview");
-      if (index != -1){
-        if(this.state.url.length === 2) {
-          this.state.url.splice(index, 1);
+      case "preview":{
+        showPreview = e.target.checked
+        if (showPreview) {
           this.setState({
-           url: this.state.url
-          })
-        } else if (this.state.url.length > 2) {
-          this.state.url.splice(index, 1);
-          this.state.url[index] = "?show=" + this.state.url[index].substr(1);
+            showFiles: this.state.showFiles.concat(handleClick(this, name, showHtml, showJs, showCss, showPreview))
+          });
+        } else {
           this.setState({
-            url: this.state.url
+            showFiles: handleClick(this, name, showHtml, showJs, showCss, showPreview)
           })
         }
-      }
-      var index = this.state.url.indexOf(",preview");
-      if (index != -1){
-        this.state.url.splice(index, 1);
-        this.setState({
-          url: this.state.url
-        })
+        break;
       }
     }
-  }
-
-  reset(){
-    this.setState((state) => ({ 
-      url: state.baseUrl,
-      ShowHTML: false,
-      ShowJS: false,
-      ShowCSS: false,
-      ShowPrev: false
-    }))
-  }
-  
+  };
   render(){
-    // these variables are created because working directly with stat created
-    // issues due to its asyncronous nature
-    var showH = this.state.ShowHTML;
-    var showJ = this.state.ShowJS;
-    var showC = this.state.ShowCSS;
-    var showP = this.state.ShowPrev;
+    const { Url } = this.state;
     return (
       <div>
-        <div>
-          <span>Current URL: </span>
-          {this.state.url}<br/>
-          <span>Plunker URL:</span><br/>
-          <input type="text" onChange={this.handleChange.bind(this)}/>
-        </div>
-        <div>
-        
-          <span>What tabs will be shown? (Defualts to index.html and preview)</span>
-          <button ref="html" onClick={this.handleClickHtml.bind(this, showH, showJ, showC, showP)}>Show html</button>
-          <button onClick={this.handleClickJS.bind(this, showH, showJ, showC, showP)}>Show JavaScript</button>
-          <button onClick={this.handleClickCSS.bind(this, showH, showJ, showC, showP)}>Show CSS</button>
-          <button onClick={this.handleClickPrev.bind(this, showH, showJ, showC, showP)}>Show Preview</button>
-          
-          <button onClick={this.reset.bind(this)}>reset</button>
-        </div>
-        <br/>
-        <div>
-        <span>Preview:</span>
-          <iframe
-            src={this.state.url}
-            frameborder="0"
-            width="100%"
-            height="480px"
-            ></iframe>
-        </div>
-      </div>
+        <label>Current URL:</label><br />
+        {Url} <br />
+        <label>Update URL:</label><br />
+        <textarea
+          onChange={this.urlChange.bind(this)} value={Url}
+        />
+        <form>
+            <label>Plunker id Slug:</label><br />
+            <input
+              type="text" ref="slug" />
+            <button type="button" onClick={this.slugChange.bind(this)}>Enter</button>
+        </form>
 
+        <span>What tabs will be shown? (Defualts to index.html and preview)</span><br/>
+          <span><b>html:</b></span>
+          <input type="checkbox" name="index.html" onChange={this.handleShowFile.bind(this)}></input>
+          <span><b>JavaScript:</b></span>
+          <input type="checkbox" name="js" onChange={this.handleShowFile.bind(this)}></input>
+          <span><b>CSS:</b></span>
+          <input type="checkbox" name="css" onChange={this.handleShowFile.bind(this)}></input>
+          <span><b>Preview:</b></span>
+          <input type="checkbox" name="preview" onChange={this.handleShowFile.bind(this)}></input>
+      </div>
     )
   }
 }
 
-ReactDOM.render(<Main />, document.getElementById('app'));
+ReactDOM.render(<Main Url={"https://embed.plnkr.co/"} />, document.getElementById('root'));

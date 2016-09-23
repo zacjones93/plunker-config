@@ -2,7 +2,7 @@ var buildPath = require('path').join(__dirname, 'public');
 module.exports = {
     entry: "./app/components/Main.js",
     output: {
-        path: buildPath,
+        path: 'buildPath',
         filename: "bundle.js",
         publicPath: '/'
     },
